@@ -48,13 +48,15 @@ window.addEventListener('DOMContentLoaded', async () => {
 
                 const startDate = details.conference.starts;
                 const startDateParsed = Date.parse(startDate);
+                console.log(startDateParsed);
                 let s = new Date(startDateParsed);
-                const starts = s.toDateString();
+                console.log(s);
+                const starts = s.toLocaleDateString();
 
                 const endDate = details.conference.ends;
                 const endDateParsed = Date.parse(endDate);
                 let e = new Date(endDateParsed);
-                const ends = e.toDateString();
+                const ends = e.toLocaleDateString();
 
                 const html = createCard(name, description, pictureUrl, starts, ends, locationName);
                 const row = document.querySelector('.row');
