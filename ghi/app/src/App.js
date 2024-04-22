@@ -1,37 +1,37 @@
-import Nav from "./Nav";
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import Nav from './Nav';
+import ListConferences from "./ListConferences";
+import NewConference from './newConferenceForm';
 
-function App(props) {
-  if (props.attendees === undefined) {
-    return null;
+function App() {
+  const [attendees, setAttendees] = useState([]);
+
+  async function loadAttendees() {
+
+    const response = await fetch('http://localhost:8001/api/attendees/');
+
+    if (response.ok) {
+      const data = await response.json();
+      const attendeeList = data.attendees;
+      setAttendees(attendeeList);
+    } else {
+      console.errorS(response);
+    }
   }
+
+  useEffect(() => {
+    loadAttendees();
+  }, [])
+
   return (
-    <>
-    <Nav />
-    <div className="container">
-      <table className="table table-dark table-striped">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Conference</th>
-          </tr>
-        </thead>
-        <tbody>
-          {props.attendees.map(attendee => {
-            return (
-              <tr key={attendee.href}>
-                <td>{ attendee.name }</td>
-                <td>{ attendee.conference }</td>
-              </tr>
-              /*<Fragment key={attendee.href}>
-                <AttendeeName { attendee.name } />
-                <ConferenceName { attendee.conference } />
-              </Fragment>*/
-            );
-          })}
-        </tbody>
-      </table>
-    </div>
-    </>
+    <BrowserRouter>
+      <Nav />
+        <Routes>
+          <Route path="/" element={<ListConferences attendees={attendees} />} />
+          <Route path='/new/conference' element={<NewConference />} />
+        </Routes>
+    </BrowserRouter>
   );
 }
 
