@@ -1,7 +1,26 @@
 import React, {useEffect, useState} from "react";
 import Image from "./images/logo.svg"
 
-export default function ListConferences(props) {
+export default function ListConferences() {
+
+  const [conferences, setConferences] = useState([])
+
+
+  const getConferences = async function () {
+    const url = `http://localhost:8000/api/conferences`
+    const response = await fetch(url)
+
+    if (!response.ok) {
+      throw new Error('Bad fetch response for conferences')
+    } else {
+      const data = await response.json()
+      setConferences(data.conferences)
+    }
+  }
+
+  useEffect(() => {
+    getConferences()
+  }, [])
 
   return (
     <>
@@ -16,28 +35,23 @@ export default function ListConferences(props) {
         </div>
       </div>
       <div className="container">
-        <table className="table table-dark table-striped">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Conference</th>
-            </tr>
-          </thead>
-          <tbody>
-            {props.attendees.map(attendee => {
+            {conferences.map(conf => {
               return (
-                <tr key={attendee.href}>
-                  <td>{ attendee.name }</td>
-                  <td>{ attendee.conference }</td>
-                </tr>
-                /*<Fragment key={attendee.href}>
-                  <AttendeeName { attendee.name } />
-                  <ConferenceName { attendee.conference } />
-                </Fragment>*/
+                <div className="col-md-4 md-4">
+                <div className="card h-100 shadow rounded">
+                    <img src={conf.location.pictureUrl} className="mh-25" />
+                    <div className="card-body">
+                        <h5 className="card-title">{conf.name}</h5>
+                        <h6 className="card-subtitle mb-2 text-muted">{conf.location}</h6>
+                        <p className="card-text">{conf.description}</p>
+                    </div>
+                    <div className="card-footer text-body-secondary">
+                    {conf.starts} - {conf.ends}
+                    </div>
+                </div>
+            </div>
               );
             })}
-          </tbody>
-        </table>
       </div>
     </>
   );
