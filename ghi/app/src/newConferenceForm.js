@@ -1,28 +1,28 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 
 export default function NewConference() {
+
+    const initialConferenceForm = {
+        name: '',
+        starts: '',
+        ends: '',
+        description: '',
+        max_presentations: '',
+        max_attendees: '',
+        location: '',
+    }
+
+    const initialLocationForm = {
+        name: '',
+        city: '',
+        room_count: '',
+        state: '',
+    }
+
 
     const [locations, setLocations] = useState([])
     const [states, setStates] = useState([])
     const [openModal, setOpenModal] = useState(false)
-
-    const initialConferenceForm = {
-        name: "",
-        starts: "",
-        ends: "",
-        description: "",
-        max_presentations: "",
-        max_attendees: "",
-        location: "",
-    }
-
-    const initialLocationForm = {
-        name: "",
-        city: "",
-        room_count: "",
-        state: "",
-    }
-
     const [conferenceFormData, setConferenceFormData] = useState(initialConferenceForm);
     const [locationFormData, setLocationFormData] = useState(initialLocationForm)
 
@@ -109,9 +109,17 @@ export default function NewConference() {
             throw new Error('Bad fetch response while creating new Location')
         } else {
             setLocationFormData(initialLocationForm)
-            setOpenModal(false)
-            getLocations()
         }
+    }
+
+    function onCloseModal() {
+        setOpenModal(false)
+    }
+
+    const handleModalSubmit = () => {
+        handleLocationSubmit()
+        onCloseModal()
+        getLocations()
     }
 
     useEffect(() => {
@@ -126,29 +134,29 @@ export default function NewConference() {
                 <form className="row g-3" onSubmit={handleSubmit}>
                     <div className="col-6">
                         <label htmlFor="name" className="form-label">Conference Name</label>
-                        <input onChange={handleConferenceFormChange} type="text" className="form-control" id="name" />
+                        <input onChange={handleConferenceFormChange} type="text" className="form-control" id="name" value={conferenceFormData.name} />
                     </div>
                     <div className="col-md-3">
                         <label htmlFor="starts" className="form-label">Start Date</label>
-                        <input onChange={handleConferenceFormChange} type="date" className="form-control" id="starts" />
+                        <input onChange={handleConferenceFormChange} type="date" className="form-control" id="starts" value={conferenceFormData.starts} />
                     </div>
                     <div className="col-md-3">
                         <label htmlFor="ends" className="form-label">End Date</label>
-                        <input onChange={handleConferenceFormChange} type="date" className="form-control" id="ends" />
+                        <input onChange={handleConferenceFormChange} type="date" className="form-control" id="ends" value={conferenceFormData.ends} />
                     </div>
                     <div className="col-12">
                         <label htmlFor="description" className="form-label">Conference Description</label>
-                        <textarea onChange={handleConferenceFormChange} type="text" className="form-control" id="description" />
+                        <textarea onChange={handleConferenceFormChange} type="text" className="form-control" id="description" value={conferenceFormData.description} />
                     </div>
                     <div className="col-5">
-                        <select id="location_pk" value={conferenceFormData.location} onChange={handleConferenceFormChange} placeholder="Choose a location" className="form-select" aria-label="Default select example">
-                        <option defaultValue="">Choose Location</option>
-                        {locations.map(l => {
-                            return (
-                                <option key={l.href} value={l.href}>{l.name} | {l.city}, {l.state.abbreviation}</option>
-                            )
-                        })}
-                    </select>
+                        <select id="location" value={conferenceFormData.location} onChange={handleConferenceFormChange} className="form-select">
+                            <option value="">Choose Location</option>
+                            {locations.map(l => {
+                                return (
+                                    <option key={l.pk} value={l.pk}>{l.name} | {l.city}, {l.state.abbreviation}</option>
+                                )
+                            })}
+                        </select>
                     </div>
 
                     <div className="col-6">
@@ -156,11 +164,11 @@ export default function NewConference() {
                     </div>
                     <div className="col-md-5">
                         <label htmlFor="max_presentations" className="form-label">Max Presentations</label>
-                        <input onChange={handleConferenceFormChange} type="number" className="form-control" id="max_presentations" />
+                        <input onChange={handleConferenceFormChange} type="number" className="form-control" id="max_presentations" value={conferenceFormData.max_presentations} />
                     </div>
                     <div className="col-md-5">
                         <label htmlFor="max_attendees" className="form-label">Max Attendees</label>
-                        <input onChange={handleConferenceFormChange} type="number" className="form-control" id="max_attendees" />
+                        <input onChange={handleConferenceFormChange} type="number" className="form-control" id="max_attendees" value={conferenceFormData.max_attendees} />
                     </div>
                     <div className="col-6">
                         <button type="submit" className="btn btn-primary">Create New Conference</button>
@@ -189,8 +197,7 @@ export default function NewConference() {
                                 <div >
                                     <label htmlFor="state" className="form-label">State</label>
                                     <select onChange={handleLocationFormChange} id="state" value={locationFormData.state} className="form-select">
-                                        <option>Choose State</option>
-                                        <option defaultValue="">Choose Location</option>
+                                        <option value="">Choose State</option>
                                         {states.map(s => {
                                             return (
                                                 <option key={s.id} value={s.abbreviation}>{s.name}</option>
@@ -200,8 +207,8 @@ export default function NewConference() {
                                 </div>
                             </div>
                             <div className="modal-footer">
-                                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="button" className="btn btn-primary" onClick={handleLocationSubmit}>Submit</button>
+                                <button type="button" className="btn btn-secondary" onClick={onCloseModal} data-bs-dismiss="modal">Close</button>
+                                <button type="button" className="btn btn-primary" onClick={handleModalSubmit}>Submit</button>
                             </div>
                         </div>
                     </div>

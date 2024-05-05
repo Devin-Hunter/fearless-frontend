@@ -16,6 +16,7 @@ class StateEncoder(ModelEncoder):
 class LocationListEncoder(ModelEncoder):
     model = Location
     properties = [
+        "pk",
         "name",
         "city",
         "picture_url",
@@ -29,6 +30,7 @@ class LocationListEncoder(ModelEncoder):
 class LocationDetailEncoder(ModelEncoder):
     model = Location
     properties = [
+        "pk",
         "name",
         "city",
         "room_count",
