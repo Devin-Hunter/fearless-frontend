@@ -3,6 +3,7 @@ import React, {useState, useEffect} from "react";
 export default function NewConference() {
 
     const [locations, setLocations] = useState([])
+    const [states, setStates] = useState([])
     const [openModal, setOpenMOdal] = useState(false)
 
     const [conferenceFormData, setConferenceFormData] = useState({
@@ -31,6 +32,18 @@ export default function NewConference() {
         } else {
             const data = await response.json()
             setLocations(data.locations)
+        }
+    }
+
+    const getStates = async function () {
+        const url = `http://localhost:8000/api/states`
+        const response = await fetch(url)
+
+        if (!response.ok) {
+            throw new Error('Bad fetch response for states')
+        } else {
+            const data = await response.json()
+            setStates(data.states)
         }
     }
 
@@ -98,6 +111,7 @@ export default function NewConference() {
 
     useEffect(() => {
         getLocations()
+        getStates()
     }, [])
 
     return (
@@ -155,27 +169,30 @@ export default function NewConference() {
                                 <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div className="modal-body">
-                            <form className="row">
                                 <div >
-                                    <label htmlFor="inputAddress" className="form-label">Location Name</label>
-                                    <input onChange={handleLocationFormChange} type="text" className="form-control" id="inputAddress" placeholder="Example: Conference Center XYZ" />
+                                    <label htmlFor="name" className="form-label">Location Name</label>
+                                    <input onChange={handleLocationFormChange} type="text" className="form-control" id="name" value={locationFormData.name} placeholder="Example: Conference Center XYZ" />
                                 </div>
                                 <div>
-                                    <label htmlFor="max_attendees" className="form-label">Room Count</label>
-                                    <input onChange={handleLocationFormChange} type="number" className="form-control" id="Max Attendees" />
+                                    <label htmlFor="room_count" className="form-label">Room Count</label>
+                                    <input onChange={handleLocationFormChange} type="number" className="form-control" id="room_count" />
                                 </div>
                                 <div>
-                                    <label htmlFor="inputCity" className="form-label">City</label>
-                                    <input onChange={handleLocationFormChange} type="text" className="form-control" id="inputCity" />
+                                    <label htmlFor="city" className="form-label">City</label>
+                                    <input onChange={handleLocationFormChange} type="text" className="form-control" id="city" />
                                 </div>
                                 <div >
-                                    <label htmlFor="inputState" className="form-label">State</label>
-                                    <select onChange={handleLocationFormChange} id="inputState" className="form-select">
-                                    <option>Choose...</option>
-                                    <option>...</option>
+                                    <label htmlFor="state" className="form-label">State</label>
+                                    <select onChange={handleLocationFormChange} id="state" className="form-select">
+                                        <option>Choose State</option>
+                                        <option defaultValue="">Choose Location</option>
+                                        {states.map(s => {
+                                            return (
+                                                <option key={s.id} value={s.abbreviation}>{s.name}</option>
+                                            )
+                                        })}
                                     </select>
                                 </div>
-                            </form>
                             </div>
                             <div className="modal-footer">
                                 <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
