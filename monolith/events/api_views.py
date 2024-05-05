@@ -51,6 +51,7 @@ class ConferenceListEncoder(ModelEncoder):
 class ConferenceDetailEncoder(ModelEncoder):
     model = Conference
     properties = [
+        "pk",
         "name",
         "description",
         "max_presentations",
@@ -90,7 +91,7 @@ def api_list_conferences(request):
         conferences = Conference.objects.all()
         return JsonResponse(
             {"conferences": conferences},
-            encoder=ConferenceListEncoder,
+            encoder=ConferenceDetailEncoder,
         )
     else:
         content = json.loads(request.body)
