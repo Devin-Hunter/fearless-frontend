@@ -4,9 +4,9 @@ export default function NewConference() {
 
     const [locations, setLocations] = useState([])
     const [states, setStates] = useState([])
-    const [openModal, setOpenMOdal] = useState(false)
+    const [openModal, setOpenModal] = useState(false)
 
-    const [conferenceFormData, setConferenceFormData] = useState({
+    const initialConferenceForm = {
         name: "",
         starts: "",
         ends: "",
@@ -14,14 +14,17 @@ export default function NewConference() {
         max_presentations: "",
         max_attendees: "",
         location: "",
-    });
+    }
 
-    const [locationFormData, setLocationFormData] = useState({
+    const initialLocationForm = {
         name: "",
         city: "",
         room_count: "",
         state: "",
-    })
+    }
+
+    const [conferenceFormData, setConferenceFormData] = useState(initialConferenceForm);
+    const [locationFormData, setLocationFormData] = useState(initialLocationForm)
 
     const getLocations = async function () {
         const url = `http://localhost:8000/api/locations`
@@ -84,7 +87,7 @@ export default function NewConference() {
         if (!response.ok) {
             throw new Error('Bad fetch response while creating new conference')
         } else {
-            setConferenceFormData(conferenceFormData)
+            setConferenceFormData(initialConferenceForm)
         }
     }
 
@@ -105,7 +108,9 @@ export default function NewConference() {
         if (!response.ok) {
             throw new Error('Bad fetch response while creating new Location')
         } else {
-            setLocationFormData(locationFormData)
+            setLocationFormData(initialLocationForm)
+            setOpenModal(false)
+            getLocations()
         }
     }
 
@@ -140,14 +145,14 @@ export default function NewConference() {
                         <option defaultValue="">Choose Location</option>
                         {locations.map(l => {
                             return (
-                                <option key={l.pk} value={l.pk}>{l.name} | {l.city}, {l.state.abbreviation}</option>
+                                <option key={l.href} value={l.href}>{l.name} | {l.city}, {l.state.abbreviation}</option>
                             )
                         })}
                     </select>
                     </div>
 
                     <div className="col-6">
-                        <button type="button" className="btn btn-info" data-bs-toggle="modal" data-bs-target="#staticBackdrop" onClick={() => setOpenMOdal(true)}>Add New Location</button>
+                        <button type="button" className="btn btn-info" data-bs-toggle="modal" data-bs-target="#staticBackdrop" onClick={() => setOpenModal(true)}>Add New Location</button>
                     </div>
                     <div className="col-md-5">
                         <label htmlFor="max_presentations" className="form-label">Max Presentations</label>
@@ -175,15 +180,15 @@ export default function NewConference() {
                                 </div>
                                 <div>
                                     <label htmlFor="room_count" className="form-label">Room Count</label>
-                                    <input onChange={handleLocationFormChange} type="number" className="form-control" id="room_count" />
+                                    <input onChange={handleLocationFormChange} type="number" className="form-control" id="room_count" value={locationFormData.room_count} />
                                 </div>
                                 <div>
                                     <label htmlFor="city" className="form-label">City</label>
-                                    <input onChange={handleLocationFormChange} type="text" className="form-control" id="city" />
+                                    <input onChange={handleLocationFormChange} type="text" className="form-control" id="city" value={locationFormData.city} />
                                 </div>
                                 <div >
                                     <label htmlFor="state" className="form-label">State</label>
-                                    <select onChange={handleLocationFormChange} id="state" className="form-select">
+                                    <select onChange={handleLocationFormChange} id="state" value={locationFormData.state} className="form-select">
                                         <option>Choose State</option>
                                         <option defaultValue="">Choose Location</option>
                                         {states.map(s => {
