@@ -42,7 +42,7 @@ export default function ListConferences() {
                       <img src={conf.location.pictureUrl} className="mh-25" />
                       <div className="card-body">
                           <h5 className="card-title">{conf.name}</h5>
-                          <h6 className="card-subtitle mb-2 text-muted">{conf.location.pk}</h6>
+                          <h6 className="card-subtitle mb-2 text-muted">{conf.location.name} | {conf.location.city}, {conf.location.state.name}</h6>
                           <p className="card-text">{conf.description}</p>
                       </div>
                       <div className="card-footer text-body-secondary">
