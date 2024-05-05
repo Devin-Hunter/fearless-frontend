@@ -49,7 +49,7 @@ export default function NewConference() {
 
     const handleConferenceFormChange = (event) => {
         const value = event.target.value;
-        const inputName = event.target.name;
+        const inputName = event.target.id;
 
         setConferenceFormData({
             ...conferenceFormData,
@@ -59,7 +59,7 @@ export default function NewConference() {
 
     const handleLocationFormChange = (event) => {
         const value = event.target.value;
-        const inputName = event.target.name;
+        const inputName = event.target.id;
 
         setLocationFormData({
             ...locationFormData,
@@ -161,8 +161,8 @@ export default function NewConference() {
                         <button type="submit" className="btn btn-primary">Create New Conference</button>
                     </div>
                 </form>
-                <div className="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                    <div class="modal-dialog">
+                <div className="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div className="modal-dialog">
                         <div className="modal-content">
                             <div className="modal-header">
                                 <h5 className="modal-title" id="staticBackdropLabel">New Conference Location</h5>
